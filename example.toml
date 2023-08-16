@@ -1,0 +1,19 @@
+[h_section]
+h = 300
+b = 300
+tw = 10
+tf = 15
+r = 13
+
+[base_plate]
+lx = 350
+ly = 350
+t = 32
+
+[anchor_bolt]
+d = 22
+l = 440
+nx = 2
+ny = 2
+jx = 200
+jy = 200
