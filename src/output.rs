@@ -166,15 +166,11 @@ fn get_bolt_coords(input: &SteelColumnDrawing) -> Vec<(f64, f64)> {
     let nx = input.anchor_bolt.nx;
     let ny = input.anchor_bolt.ny;
 
-    if nx < 2 || ny < 2 {
-        return coords;
-    }
-
     let jx = input.anchor_bolt.jx;
     let jy = input.anchor_bolt.jy;
 
-    let px = jy / (nx - 1) as f64;
-    let py = jx / (ny - 1) as f64;
+    let px = if nx == 1 { 0.0 } else { jy / (nx - 1) as f64 };
+    let py = if ny == 1 { 0.0 } else { jx / (ny - 1) as f64 };
 
     let y_start = -jy / 2.0;
 
