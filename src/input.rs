@@ -1,5 +1,5 @@
+use anyhow::Result;
 use serde_derive::Deserialize;
-use std::error::Error;
 use std::io::Read;
 use std::{fs, io::BufReader};
 
@@ -56,20 +56,17 @@ impl Default for LayerName {
     }
 }
 
-fn read_file(path: &str) -> Result<String, String> {
+fn read_file(path: &str) -> Result<String> {
     let mut file_content = String::new();
 
-    let mut fr = fs::File::open(path)
-        .map(BufReader::new)
-        .map_err(|e| e.to_string())?;
+    let mut fr = fs::File::open(path).map(BufReader::new)?;
 
-    fr.read_to_string(&mut file_content)
-        .map_err(|e| e.to_string())?;
+    fr.read_to_string(&mut file_content)?;
 
     Ok(file_content)
 }
 
-pub fn read_input(file_path: &str) -> Result<SteelColumnDrawing, Box<dyn Error>> {
+pub fn read_input(file_path: &str) -> Result<SteelColumnDrawing> {
     let s = read_file(file_path).expect("failed to read file");
 
     let toml: Result<SteelColumnDrawing, toml::de::Error> = toml::from_str(&s);

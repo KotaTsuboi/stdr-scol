@@ -1,13 +1,13 @@
 use crate::input::SteelColumnDrawing;
 use crate::output_util::*;
+use anyhow::Result;
 use dxf::{
     entities::{Circle, Entity, Line, Polyline},
     tables::Layer,
     Color, Drawing, Point,
 };
-use std::error::Error;
 
-fn set_layer(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<(), Box<dyn Error>> {
+fn set_layer(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
     let layer = Layer {
         name: input.layer_name.s_column.clone(),
         color: Color::from_index(4),
@@ -35,7 +35,7 @@ fn set_layer(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<(), Bo
     Ok(())
 }
 
-fn write_column(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<(), Box<dyn Error>> {
+fn write_column(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
     let h = input.h_section.h;
     let b = input.h_section.b;
     let tw = input.h_section.tw;
@@ -144,10 +144,7 @@ fn write_column(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<(),
     Ok(())
 }
 
-fn write_base_plate(
-    drawing: &mut Drawing,
-    input: &SteelColumnDrawing,
-) -> Result<(), Box<dyn Error>> {
+fn write_base_plate(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
     let lx = input.base_plate.lx;
     let ly = input.base_plate.ly;
     let layer = &input.layer_name.plate;
@@ -199,10 +196,7 @@ fn get_bolt_coords(input: &SteelColumnDrawing) -> Vec<(f64, f64)> {
     coords
 }
 
-fn write_anchor_bolts(
-    drawing: &mut Drawing,
-    input: &SteelColumnDrawing,
-) -> Result<(), Box<dyn Error>> {
+fn write_anchor_bolts(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
     let d = input.anchor_bolt.d;
     let bolt_layer = &input.layer_name.bolt;
     let plate_layer = &input.layer_name.plate;
@@ -218,7 +212,7 @@ fn write_anchor_bolts(
     Ok(())
 }
 
-pub fn write(input: SteelColumnDrawing, output_file: &str) -> Result<(), Box<dyn Error>> {
+pub fn write(input: SteelColumnDrawing, output_file: &str) -> Result<()> {
     let mut drawing = Drawing::new();
 
     set_layer(&mut drawing, &input)?;
