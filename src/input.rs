@@ -12,6 +12,7 @@ pub struct SteelColumnDrawing {
     pub anchor_plate: AnchorPlate,
     #[serde(default)]
     pub layer_name: LayerName,
+    pub layout: Layout,
 }
 
 #[derive(Deserialize)]
@@ -57,6 +58,12 @@ pub struct LayerName {
     pub s_column: String,
     pub bolt: String,
     pub plate: String,
+    pub text: String,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct Layout {
+    pub text_height: f64,
 }
 
 impl Default for LayerName {
@@ -65,6 +72,7 @@ impl Default for LayerName {
             s_column: "S柱".to_string(),
             bolt: "Sボルト".to_string(),
             plate: "Sプレート".to_string(),
+            text: "注釈".to_string(),
         }
     }
 }

@@ -28,3 +28,12 @@ note = "ダブルナット締め"
 t = 22
 d = 120
 material = "SS400"
+
+[layer_name]
+s_column = "S柱"
+bolt = "Sボルト"
+plate = "Sプレート"
+text = "注釈"
+
+[layout]
+text_height = 100

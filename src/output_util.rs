@@ -1,9 +1,9 @@
 use anyhow::Result;
 use dxf::{
-    entities::{Arc, Circle, DimensionBase, Entity, EntityType, Line, OrdinateDimension, Text},
+    entities::{Arc, Circle, DimensionBase, Entity, Line, OrdinateDimension},
     enums::{HorizontalTextJustification, VerticalTextJustification},
-    tables::{DimStyle, Layer},
-    Color, Drawing, Point,
+    tables::DimStyle,
+    Drawing, Point,
 };
 
 pub fn write_line(
@@ -140,5 +140,29 @@ pub fn write_dimension(
 
     drawing.add_entity(dimension);
 
+    Ok(())
+}
+
+pub fn write_text(
+    drawing: &mut Drawing,
+    x: f64,
+    y: f64,
+    text_height: f64,
+    value: &str,
+    layer: &str,
+) -> Result<()> {
+    let location = Point { x, y, z: 0.0 };
+
+    let text = dxf::entities::Text {
+        location,
+        text_height,
+        value: value.to_string(),
+        horizontal_text_justification: HorizontalTextJustification::Middle,
+        vertical_text_justification: VerticalTextJustification::Middle,
+        ..Default::default()
+    };
+    let mut entity = Entity::new(dxf::entities::EntityType::Text(text));
+    entity.common.layer = layer.to_string();
+    drawing.add_entity(entity);
     Ok(())
 }

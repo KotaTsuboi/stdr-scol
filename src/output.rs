@@ -1,11 +1,7 @@
 use crate::input::SteelColumnDrawing;
 use crate::output_util::*;
 use anyhow::Result;
-use dxf::{
-    entities::{Circle, Entity, Line, Polyline},
-    tables::Layer,
-    Color, Drawing, Point,
-};
+use dxf::{tables::Layer, Color, Drawing};
 
 fn set_layer(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
     let layer = Layer {
@@ -27,6 +23,14 @@ fn set_layer(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
     let layer = Layer {
         name: input.layer_name.plate.clone(),
         color: Color::from_index(1),
+        ..Default::default()
+    };
+
+    drawing.add_layer(layer);
+
+    let layer = Layer {
+        name: input.layer_name.text.clone(),
+        color: Color::from_index(3),
         ..Default::default()
     };
 
@@ -212,6 +216,51 @@ fn write_anchor_bolts(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Resu
     Ok(())
 }
 
+fn write_texts(drawing: &mut Drawing, input: &SteelColumnDrawing) -> Result<()> {
+    let text_height = input.layout.text_height;
+    let x = 0.0;
+    let mut y = -1000.0;
+    let dy = 2.0 * text_height;
+
+    let values = [
+        input.column_name.clone(),
+        format!(
+            "H-{}x{}x{}x{}({})",
+            input.h_section.h,
+            input.h_section.b,
+            input.h_section.tw,
+            input.h_section.tf,
+            input.h_section.material,
+        ),
+        format!(
+            "BPL-{}x{}x{}({})",
+            input.base_plate.t, input.base_plate.lx, input.base_plate.ly, input.base_plate.material,
+        ),
+        format!(
+            "{}-M{}(L={},{})",
+            2 * (input.anchor_bolt.nx - 1) + 2 * (input.anchor_bolt.ny - 1),
+            input.anchor_bolt.d,
+            input.anchor_bolt.l,
+            input.anchor_bolt.material,
+        ),
+        format!("({})", input.anchor_bolt.note),
+        format!(
+            "PL-{}x{}x{}({})",
+            input.anchor_plate.t,
+            input.anchor_plate.d,
+            input.anchor_plate.d,
+            input.anchor_plate.material,
+        ),
+    ];
+
+    for value in values {
+        write_text(drawing, x, y, text_height, &value, &input.layer_name.text)?;
+        y -= dy;
+    }
+
+    Ok(())
+}
+
 pub fn write(input: SteelColumnDrawing, output_file: &str) -> Result<()> {
     let mut drawing = Drawing::new();
 
@@ -222,6 +271,8 @@ pub fn write(input: SteelColumnDrawing, output_file: &str) -> Result<()> {
     write_base_plate(&mut drawing, &input)?;
 
     write_anchor_bolts(&mut drawing, &input)?;
+
+    write_texts(&mut drawing, &input)?;
 
     drawing.save_file(output_file)?;
 
