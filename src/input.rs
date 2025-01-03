@@ -5,9 +5,11 @@ use std::{fs, io::BufReader};
 
 #[derive(Deserialize)]
 pub struct SteelColumnDrawing {
+    pub column_name: String,
     pub h_section: HSection,
     pub base_plate: BasePlate,
     pub anchor_bolt: AnchorBolt,
+    pub anchor_plate: AnchorPlate,
     #[serde(default)]
     pub layer_name: LayerName,
 }
@@ -20,6 +22,7 @@ pub struct HSection {
     pub tf: f64,
     #[serde(default)]
     pub r: f64,
+    pub material: String,
 }
 
 #[derive(Deserialize)]
@@ -27,6 +30,7 @@ pub struct BasePlate {
     pub lx: f64,
     pub ly: f64,
     pub t: f64,
+    pub material: String,
 }
 
 #[derive(Deserialize)]
@@ -37,6 +41,15 @@ pub struct AnchorBolt {
     pub ny: u32,
     pub jx: f64,
     pub jy: f64,
+    pub material: String,
+    pub note: String,
+}
+
+#[derive(Deserialize)]
+pub struct AnchorPlate {
+    pub t: f64,
+    pub d: f64,
+    pub material: String,
 }
 
 #[derive(Deserialize, Clone)]

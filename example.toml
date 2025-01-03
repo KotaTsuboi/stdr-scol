@@ -1,14 +1,18 @@
+column_name = "C1"
+
 [h_section]
 h = 300
 b = 300
 tw = 10
 tf = 15
 r = 13
+material = "SM490A"
 
 [base_plate]
 lx = 350
 ly = 350
 t = 32
+material = "SN490B"
 
 [anchor_bolt]
 d = 22
@@ -17,3 +21,10 @@ nx = 2
 ny = 2
 jx = 200
 jy = 200
+material = "ABR490"
+note = "ダブルナット締め"
+
+[anchor_plate]
+t = 22
+d = 120
+material = "SS400"
